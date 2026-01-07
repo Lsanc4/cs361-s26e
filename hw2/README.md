@@ -19,7 +19,26 @@ Have a look at the `Makefile`. It has no target for printf. Figure out why this 
 As we've learned in class, processes must use system calls to communicate with the outside world.
 This includes putting characters on a screen! So which system call does printf use to do this? Let's find out.
 
+Run the `printf` program under `gdb` with `gdb printf`, then type `run`. 
+To stop execution at the first system call, use `catch syscall`, then `run`. 
+This works almost exactly the same as a breakpoint (which you add with `break`). 
+The only difference is that it stops execution at every place where a system call is made. 
+
+Use `bt` to see the backtrace of the program at this point. Use `continue` (or just `c`) to continue execution. If you hit Enter, it runs the same command again. So try `c`, then hold in Enter until you see the `Hello world` print. Now you should be able to see which system call was used. 
+
+Delete the catch point with `del 1`, and introduce a new one for just the system call you're interested in:
+`catch syscall SYSCALLNAME`, replacing the syscall you want, then `run` again. Execution will stop right before the print. 
+
+Try a `bt` to see the stack of function calls that resulted in eventually making this syscall. At the top, you'll see `main`, but no `printf`. This is because the compiler decided to replace `printf` with `puts` due to it being just a simple string. 
+
+Use `disass` to see the assembly of the function at the system call location. 
+
+*Demonstrate: show the TA the disassembly at the system call location, and point out the instruction that makes the actual system call. 
+
 ## Lab step 3: Do it with `libc` `write()` instead
+
+You may have noticed 
+
 
 ## Lab step 4: Do it with assembly instead
 
