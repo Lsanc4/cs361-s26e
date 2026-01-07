@@ -35,7 +35,6 @@ If you prefer a local Linux installation, you *must not* use "Windows Subsystem 
 Instead, use a full virtual machine (VMWare licenses are available for free), dual booting, or simply stick with Linux for everything on your laptop. 
 For the least trouble, use Ubuntu 24.04.3 LTS. 
 
-
 For lab credit, you must *demonstrate:* logging in to a Linux machine that is not running on WSL, either via ssh or locally, without typing in a password.
 
 ## Lab preliminary step 2: Prepare a code Editor
@@ -186,4 +185,17 @@ As you noticed in steps 5 and 6, shared libraries can be replaced at runtime. In
 The ``lowercase`` call goes straight to 1262, the address of ``lowercase``. 
 But where does the ``changecase`` call go? It also has a fixed address...
 
-See how far you can track this. 
+See how far you can track this by reading the output of `objdump -D dynamic`. FWIW, `0x3fb8` is populated at runtime with an array of symbol name pointers. `0x3fc0` is populated at runtime with the address of a name resolution helper function in `ld-linux-x86-64.so.2`. 
+
+## Advanced step 10: a first look at Rust 
+
+Install rust following the instructions at https://rust-lang.org/learn/get-started/
+
+Then, create a rust project with `cargo new hw1rust`. `cd hw` then `cargo run` to 
+build and run the code in `src/main.rs`. It prints a familiar message.
+
+The produced binary is `target/debug/hw1rust`. It is similar in many ways to the C executable, but considerably larger: by default, Rust executables include a lot of extra baggage. This makes using `objdump -D` cumbersome. However, try `objdump --disassemble=main target/debug/hw1rust` to see the produced code for `main`. 
+
+This is actually a wrapper function, not the one in `src/main.rs`. However, you should be able to find the symbol for the actual main function by carefully reading the `objdump` output. See if you can track down the 
+actual `call` instruction that prints the string. To make sure you found it, consider changing `src/main.rs` 
+to print another string, and see if the same instruction appears twice. 
