@@ -1,0 +1,520 @@
+% !TEX program = xelatex
+\documentclass[11pt]{article}
+
+% -----------------------------
+% Page layout
+% -----------------------------
+\usepackage[margin=1in]{geometry}
+
+% -----------------------------
+% Font: Calibri (requires XeLaTeX or LuaLaTeX)
+% -----------------------------
+\usepackage{fontspec}
+\IfFontExistsTF{Calibri}{
+  \setmainfont{Calibri}
+}{
+  \setmainfont{Arial}
+}
+
+% -----------------------------
+% Common utilities
+% -----------------------------
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+
+% Spacing
+\usepackage{setspace}
+
+% Headings with gray box
+\usepackage[explicit]{titlesec}
+\usepackage{tikz}
+
+% -----------------------------
+% Hyperlinks
+% -----------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  citecolor=blue
+}
+
+% Word-like paragraph behavior (tighter)
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.18\baselineskip} % was 0.55
+\setstretch{1.03}                      % was 1.12
+\raggedbottom
+
+% -----------------------------
+% Lists (Word-like indentation and tight spacing)
+% -----------------------------
+\setlist[itemize]{leftmargin=1.25em, itemsep=0.15em, topsep=0.15em, parsep=0pt, partopsep=0pt}
+\setlist[enumerate]{leftmargin=1.25em, itemsep=0.15em, topsep=0.15em, parsep=0pt, partopsep=0pt}
+
+% -----------------------------
+% Gray boxed section heading (Word-like)
+% -----------------------------
+\definecolor{uiclightgray}{RGB}{200,200,200}
+
+\titleformat{\section}
+  {\Large\bfseries\sffamily}
+  {}
+  {0em}
+  {%
+    \begin{tikzpicture}[baseline=(title.base)]
+      \node[
+        inner sep=8pt,
+        fill=uiclightgray,
+        draw=black,
+        line width=0.8pt,
+        text width=\dimexpr\textwidth-16pt\relax,
+        align=left,
+        anchor=west
+      ] (title) {#1};
+    \end{tikzpicture}%
+  }
+  []
+
+% Control vertical spacing around section bars
+\titlespacing*{\section}{0pt}{0.9\baselineskip}{0.6\baselineskip}
+
+% Subsections: compact and bold like the Word template
+\titleformat{\subsection}{\bfseries}{\thesubsection}{0.5em}{#1}
+\titlespacing*{\subsection}{0pt}{0.8\baselineskip}{0.35\baselineskip}
+
+% -----------------------------
+% Table helpers
+% -----------------------------
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% Longtable spacing and padding similar to Word
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{0pt}
+\renewcommand{\arraystretch}{1.02}
+\setlength{\tabcolsep}{6pt}
+
+% -----------------------------
+% Editable course metadata
+% -----------------------------
+\newcommand{\collegeName}{COLLEGE OF ENGINEERING, UIC}
+
+\newcommand{\courseRubric}{CS}
+\newcommand{\courseNumber}{361}
+\newcommand{\courseTitle}{Systems Programming}
+\newcommand{\creditHours}{4}
+
+\newcommand{\termSemesterYear}{Spring 2026}
+
+\newcommand{\instructorName}{Jakob Eriksson}
+\newcommand{\instructorEmail}{jakob@uic.edu}
+\newcommand{\officeHours}{Wednesdays 1-3 pm}
+\newcommand{\officeHoursLocation}{CDRLC 4452}
+
+% \newcommand{\coInstructorName}{Teaching Assistant or Co-Instructor Name}
+% \newcommand{\coInstructorEmail}{ta@uic.edu}
+% \newcommand{\sectionDesignations}{Section designation(s)}
+% \newcommand{\coOfficeHours}{Wed }
+% \newcommand{\coOfficeHoursLocation}{Office location or Zoom link}
+
+\newcommand{\blackboardLinkText}{Piazza}
+\newcommand{\blackboardLinkUrl}{https://piazza.com}
+
+\newcommand{\catalogDescription}{%
+This course is a study of computer systems emphasizing their impact on application level programming. 
+By the end of the class, you will have a good low-level understanding of how applications
+are built from source code, how processes are created from executables, and the environment that
+processes run in, all primarily from a Unix perspective. In addition, you will have a good familiarity
+with the most important tools that a systems programmer uses, including build tools, debuggers,
+profilers and tracers.
+
+\textbf{Prerequisite:} CS261
+}
+
+\newcommand{\growthMindsetStatement}{%
+Course materials and assignments can be complex and challenging, but they are crucial
+to your intellectual and personal growth and development. There are times you may need
+extra help. Students who attend class consistently, complete all assignments, thoughtfully
+engage with feedback on work, develop good study strategies, visit the tutoring center,
+and contact faculty when struggling can develop a thorough understanding of the course
+material and ultimately succeed in the course.
+}
+
+\newcommand{\courseGoalsLearningOutcomes}{%
+\begin{itemize}
+\item  Analyze a complex computing problem and apply principles of computing and other relevant disciplines to identify solutions.
+\item Design, implement, and evaluate a computing-based solution to meet a given set of computing requirements in the context of the program's discipline.
+%\item Communicate effectively in a variety of professional contexts.
+%\item Recognize professional responsibilities and make informed judgments in computing practice based on legal and ethical principles.
+%\item Function effectively as a member or leader of a team engaged in activities appropriate to the program’s discipline.
+\end{itemize}
+
+\textbf{Course requirement status:} Required for Computer Science majors.\\
+%\textbf{Topics overview:} [Brief list of topics to be covered.]
+}
+
+\newcommand{\courseMaterials}{%
+{\bf Textbook:} Computer Systems a Programmer's Perspective, by Bryant and O'Hallaron. 
+\\
+{\bf Technology:} This course requires the use of a standard portable computer running Linux, Mac OS or Windows.
+You must have an ssh client software, and be familiar with its use. 
+I recommend using Visual Studio Code with the Remote SSH plug-in for editing files on department servers.
+}
+
+% \newcommand{\copyrightStatement}{%
+% Please protect the copyright integrity of all course materials and content.
+% Please do not upload course materials not created by you onto third-party websites
+% or share content with anyone not enrolled in our course.
+% }
+
+\newcommand{\gradingPolicy}{
+
+Your final letter grade is determined based on your course percentage, which has the following components:
+
+\begin{itemize}
+  \item 10 Lab completion credits (weight 1 each)
+  \item 10 Post-assignment paper quizzes (weight 4 each)
+  \item Midterm paper exam (weight 20)
+  \item Final paper exam (weight 30)
+  \item Sum of weights: 100
+\end{itemize}
+
+The course percentage is the weighted average percentage of the final and the other 21 components above, with {\bf one major modification}: 
+with the exception of the final exam, if ignoring a component would improve your course percentage, then it is not counted. 
+
+The purpose of the quiz vs. assignment-based grading policy is to emphasize individual learning, rather than skill in completing assignments or AI prompting. 
+The purpose of the course percentage computation is to provide maximum flexibility. 
+
+For example, if you score 100\% on the final, then no other components are counted, and your course percentage is 100\%. 
+If you miss the final, and the midterm, but score 100\% on all the labs and quizzes, then your course percentage is $50/(50+30)$, as the
+midterm is ignored, but the final is not.
+}
+
+\newcommand{\lateWorkPolicy}{%
+There is no explicit accomodation for late work in this course, see grading policy.
+}
+
+\newcommand{\attendanceParticipationPolicy}{%
+Attendance is not taken nor required in this course. 
+}
+
+\newcommand{\academicIntegrityPolicy}{%
+You may use any tools or methods you see fit to learn the materials of this course and to 
+complete assignments. This includes enlisting the help of classmates, instructors and all AI chatbots.
+
+However, you will be evaluated on your own knowledge, through paper-based quizzes and exams. 
+
+Please review the UIC Student Disciplinary Policy for additional information.
+}
+
+\newcommand{\emailExpectations}{%
+Please use Piazza for all class-related communication.  For example,
+questions about assignments, missing quizzes, exam results, study technique, etc are all suitable for Piazza. 
+}
+
+\newcommand{\scheduleDisclaimer}{%
+This syllabus is intended to give the student guidance on what may be covered during the semester
+and will be followed as closely as possible. However, as the instructor, I reserve the right to
+modify, supplement, and make changes as course needs arise. I will communicate such changes in
+advance through in-class announcements on Piazza.
+}
+
+\newcommand{\disabilityAccommodation}{%
+UIC is committed to full inclusion and participation of people with disabilities in all aspects of university life.
+If you face or anticipate disability-related barriers while at UIC, please connect with the Disability Resource Center (DRC)
+at \url{https://drc.uic.edu}, via email at \href{mailto:drc@uic.edu}{drc@uic.edu}, or call (312) 413-2183 to create a plan for
+reasonable accommodations. To receive accommodations, you will need to disclose the disability to the DRC, complete an interactive
+registration process with the DRC, and provide me with a Letter of Accommodation (LOA). Upon receipt of an LOA, I will gladly work
+with you and the DRC to implement approved accommodations.
+}
+
+\newcommand{\religiousAccommodation}{%
+Following campus policy, if you wish to observe religious holidays, you must notify me by the tenth day of the semester.
+If the religious holiday is observed on or before the tenth day of the semester, you must notify me at least five days
+before you will be absent. Please submit this form by email with the subject heading: ``YOUR NAME: Requesting Religious Accommodation.''
+}
+
+% \newcommand{\inclusiveCommunity}{%
+% UIC values diversity and inclusion. Regardless of age, disability, ethnicity, race, gender, gender identity, sexual orientation,
+% socioeconomic status, geographic background, religion, political ideology, language, or culture, we expect all members of this class
+% to contribute to a respectful, welcoming, and inclusive environment for every other member of our class. If aspects of this course
+% result in barriers to your inclusion, engagement, accurate assessment, or achievement, please notify me as soon as possible.
+% }
+
+% \newcommand{\namePronounUse}{%
+% If your name does not match the name on my class roster, please let me know as soon as possible.
+% My pronouns are [she/her; he/him; they/them]. I welcome your pronouns if you would like to share them with me.
+% For more information about pronouns, see: \url{https://www.mypronouns.org/what-and-why}.
+% }
+
+% \newcommand{\communityAgreement}{%
+% \begin{itemize}
+%   \item Be present by turning off cell phones and removing yourself from other distractions.
+%   \item Be respectful of the learning space and community.
+%   \item Use preferred names and gender pronouns.
+%   \item Assume goodwill in all interactions, even in disagreement.
+%   \item Facilitate dialogue and value the free and safe exchange of ideas.
+%   \item Try not to make assumptions, have an open mind, seek to understand, and not judge.
+%   \item Debate the concepts, not the person.
+%   \item Be willing to work together and share helpful study strategies.
+%   \item Be mindful of one another's privacy and do not invite outsiders into our classroom.
+% \end{itemize}
+% }
+
+% \newcommand{\contentNotices}{%
+% Our classroom provides an open space for a critical and civil exchange of ideas, inclusive of a variety of perspectives and positions.
+% Some readings and other content may expose you to ideas, subjects, or views that may challenge you, cause you discomfort, or recall past
+% negative experiences or traumas. I intend to discuss all subjects with dignity and humanity, as well as with rigor and respect for scholarly inquiry.
+% If you would like me to be aware of a specific topic of concern, please email or visit my Student Drop-In Hours.
+% }
+
+% \newcommand{\resourcesSection}{%
+% We all need the help and the support of our UIC community. Please visit my office hours for course consultation and other academic or research topics.
+% For additional assistance, please contact your assigned college advisor and visit the support services available to all UIC students.
+
+% \subsection*{Academic Success}
+% \begin{itemize}
+%   \item UIC tutoring resources
+%   \item College of Engineering tutoring program
+%   \item Equity and Inclusion in Engineering Program
+%   \item UIC Library and UIC Library Research Guides
+%   \item Offices supporting the UIC undergraduate experience and academic programs
+%   \item Student Guide for Information Technology
+% \end{itemize}
+
+% \subsection*{Wellness}
+% \begin{itemize}
+%   \item Counseling Services: \url{https://counseling.uic.edu/}
+%   \item Access U\&I Care Program for assistance with personal hardships
+%   \item Campus Advocacy Network (Title IX): \href{mailto:TitleIX@uic.edu}{TitleIX@uic.edu} \quad and \quad \url{http://can.uic.edu/}
+% \end{itemize}
+
+% \subsection*{Safety}
+% \begin{itemize}
+%   \item UIC Safe App (please download for your safety)
+%   \item UIC Safety Tips and Resources
+%   \item Night Ride
+%   \item Emergency: Dial 5-5555 from a campus phone, or (312) 355-5555 from a cell phone
+% \end{itemize}
+% }
+
+\begin{document}
+
+% -----------------------------
+% Centered header block
+% -----------------------------
+\begin{center}
+  {\LARGE\bfseries \collegeName}\par
+  \vspace{0.75em}
+  {\Large\bfseries
+    \courseRubric\ \courseNumber\quad
+    \courseTitle\quad
+    (\creditHours\ Credit Hours)
+  }\par
+  \vspace{0.5em}
+  {\large \termSemesterYear}\par
+\end{center}
+
+\vspace{0.9\baselineskip}
+
+% -----------------------------
+% Instructor and course details
+% -----------------------------
+\section*{Instructor \& Course Details}
+
+\noindent
+\begin{tabular}{@{}p{0.28\linewidth}p{0.70\linewidth}@{}}
+\textbf{Days/Times \& Location:} & TR 3:30-4:45 in CDRLC 1426\\
+\textbf{Instructor:} & \instructorName \\
+\textbf{Email:} & \href{mailto:\instructorEmail}{\instructorEmail} \\
+\textbf{Drop-In Office Hours:} & \officeHours \\
+\textbf{Drop-In Hours Location:} & \officeHoursLocation \\
+
+\end{tabular}
+
+% \vspace{0.6\baselineskip}
+
+% % \noindent
+% % \begin{tabular}{@{}p{0.28\linewidth}p{0.70\linewidth}@{}}
+% % \textbf{Co-Instructor/TA:} & \coInstructorName \\
+% % \textbf{Email:} & \href{mailto:\coInstructorEmail}{\coInstructorEmail} \\
+% % \textbf{Section designation(s):} & \sectionDesignations \\
+% % \textbf{Drop-In Office Hours:} & \coOfficeHours \\
+% % \textbf{Drop-In Hours Location:} & \coOfficeHoursLocation \\
+% % \end{tabular}
+
+% \vspace{0.6\baselineskip}
+
+\noindent
+\begin{tabular}{@{}p{0.28\linewidth}p{0.70\linewidth}@{}}
+\textbf{Course site:} & \href{\blackboardLinkUrl}{\blackboardLinkText} \\
+\end{tabular}
+
+Students are expected to log into the course site regularly to learn about any developments related to the course,
+and communicate with instructors and classmates.
+
+
+% -----------------------------
+% Course information
+% -----------------------------
+\section*{Course Information}
+
+\subsection*{Catalog Course Description and Prerequisite/Corequisite Statement}
+\catalogDescription
+
+% \subsection*{Growth Mindset}
+% \growthMindsetStatement
+
+\subsection*{ABET Course Goals and Learning Outcomes}
+\courseGoalsLearningOutcomes
+
+\subsection*{Required Textbook \& Technology}
+\courseMaterials
+
+% \subsection*{Respect for Copyright}
+% \copyrightStatement
+
+% -----------------------------
+% Course policies and classroom expectations
+% -----------------------------
+\section*{Course Policies \& Classroom Expectations}
+
+\subsection*{Grading Policy and Point Breakdown}
+\gradingPolicy
+
+\subsection*{Policy for Missed or Late Work}
+\lateWorkPolicy
+
+\subsection*{Attendance and Participation Policy}
+\attendanceParticipationPolicy
+
+\subsection*{Academic Integrity}
+\academicIntegrityPolicy
+
+% \subsection*{Email Expectations}
+% \emailExpectations
+
+\newpage
+% -----------------------------
+% Course schedule
+% -----------------------------
+\section*{Course Schedule}
+
+{
+% --- Schedule table: inside margins + taller rows + no underfull hbox warnings ---
+\renewcommand{\arraystretch}{1.25}
+\setlength{\extrarowheight}{1.5pt}
+\setlength{\tabcolsep}{4pt}
+
+
+% Processes
+%  Structure and Creation of Executables and Processes (building & linking & shared libraries & LD_PRELOAD)
+%  Process Abstraction and System Call Interface (gdb & inline assembly (incl rdtscp) & signal delivery and handling)
+%  Virtual memory
+
+% I/O
+%  File Descriptors - the Unix I/O abstraction (runCommand() & runInteractive(): fork, exec, dup2)
+%  Network Programming with Sockets and Epoll (limerick server. "speakers" deliver words or syllables at a time.)
+
+% Memory
+%  Globals, Stack, Heap & Malloc (inspecting memory layout with gdb: address of globals, stack, heap. library globals, library locals, library heap variables. size of heap chunks.  )
+%  Mmap and IPC (runInteractive, but comms through memory mapped file.)
+
+% Concurrency
+%  Multi-Threaded Programming Model (multi-threaded limerick server: subscriptions to atomically delivered limericks)
+%  Race Conditions, Synchronization, Deadlocks (live streaming limerick server. tests check timing between syllables)
+
+% Diagnostics Facilities
+%  Debugging (basic debugger with ptrace api - catching system calls, printing register values)
+%  Performance Diagnostics (working with time, perf, strace)
+
+
+\begin{longtable}{@{}
+  >{\raggedright\arraybackslash}p{\dimexpr 0.1\linewidth-2\tabcolsep\relax}
+  >{\raggedright\arraybackslash}p{\dimexpr 0.3\linewidth-2\tabcolsep\relax}
+  >{\raggedright\arraybackslash}p{\dimexpr 0.5\linewidth-2\tabcolsep\relax}
+  >{\raggedright\arraybackslash}p{\dimexpr 0.1\linewidth-2\tabcolsep\relax}
+@{}}
+\toprule
+\textbf{Week of} & \textbf{Topic(s) / In-Class Activities} & \textbf{Assignment due Tuesday 3:30pm} & \textbf{Reading}\\
+\midrule
+\endfirsthead
+
+\toprule
+\textbf{Week of} & \textbf{Topic(s) / In-Class Activities} & \textbf{Assignment due Tuesday 3:30pm} & \textbf{Reading}\\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{4}{r}{(continued)}\\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+01/12 & Executables and Libraries & & CSAPP Ch 7 \\
+01/19 & Processes and System Calls & hw1: linking and shared libraries & CSAPP Ch 8.1-8.2 \\
+01/26 & File I/O &  hw2: syscalls and signals \\
+02/02 & Network I/O & hw3: runCommand and runInteractive \\
+02/09 & Adv. I/O & hw4: socket server with epoll \\
+02/16 & Memory Layout - Process and Data Structure &  \\
+02/23 & Memory Management - Malloc and Mmap & hw5: learning about memory layout with gdb \\
+03/02 & Adv. Memory Management & hw6: IPC over shared memory \\
+03/09 & Midterm and Review &  \\
+03/16 & Programming with Threads &  \\
+\hline
+03/23 & \textit{SPRING BREAK} \\
+\hline
+03/30 & Race Conditions, Synchronization and Deadlock & hw7: multi-threaded socket server \\
+04/06 & Adv. Concurrency & hw8: concurrency bug hunt \\
+04/13 & PTrace - the API for debugging &  \\
+04/20 & Performance Monitoring with perf and strace & hw9: basic debugger with ptrace \\
+04/27 & Bonus Topic and Final Review & hw10: hands-on performance diagnostics \\
+\hline
+05/04 & \textit{FINAL EXAM WEEK} & Final Exam is on Friday May 7 at 1-3 PM \\
+\end{longtable}
+}
+
+\subsection*{Disclaimer}
+\scheduleDisclaimer
+
+\newpage
+% -----------------------------
+% Accommodations
+% -----------------------------
+\section*{Accommodations}
+
+\subsection*{Disability Accommodation Procedures}
+\disabilityAccommodation
+
+% \subsection*{Religious Accommodations}
+% \religiousAccommodation
+
+% % -----------------------------
+% % Classroom environment
+% % -----------------------------
+% \section*{Classroom Environment}
+
+% \subsection*{Inclusive Community}
+% \inclusiveCommunity
+
+% \subsection*{Name and Pronoun Use}
+% \namePronounUse
+
+% \subsection*{Community Agreement / Classroom Conduct Policy}
+% \communityAgreement
+
+% \subsection*{Content Notices}
+% \contentNotices
+
+% % -----------------------------
+% % Resources
+% % -----------------------------
+% \section*{Resources: Academic Success, Wellness, and Safety}
+% \resourcesSection
+
+\end{document}
