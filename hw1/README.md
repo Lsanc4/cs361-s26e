@@ -55,7 +55,7 @@ file on the server.
 
 Most people use vim because they don't know better. Some people do it despite knowing better. If you choose to use vim and want lab credit, you must prove you are one of them by demonstrating advanced vim proficiency. 
 
-*Demonstrate:* given this file, replace three instances of the string "ing" with "ING" using a single command. That is, you may not use the command three times. Then, insert a copy of the third line of this file, at line 40, using a command, not the arrow keys.
+**Demonstrate:** given this file (`README.md`), replace three instances of the string "ing" with "ING" using a single command. That is, you may not use the command three times. Then, quickly navigate to some set of parenthesis and, without entering insert mode or starting a selection, delete the text inside the parenthesis (leaving the empty `()` pair intact).
 
 ## Lab step 3: clone the hw1 github repo, build and run your first program
 
