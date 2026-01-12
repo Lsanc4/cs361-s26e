@@ -118,7 +118,7 @@ with the same name as libraries loaded later, these symbols will be used instead
 
 ## Remaining step 7: studying Makefiles 
 
-When you run ``make`` in the hw1 folder, several files are automatically created. 
+When you run ``make static`` in the hw1 folder, several files are automatically created. 
 
 Read the Makefile to see how it works. The ``static`` target has three dependencies listed after the ``:``. For files that already exist, such as ``uppercase.c``, no further work is required. However, the file ``main.o`` is automatically built 
 from the ``main.s`` file, which is built from ``main.pre.c`` and so on. The
