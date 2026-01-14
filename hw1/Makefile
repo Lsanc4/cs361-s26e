@@ -18,7 +18,7 @@ libupper.so: upper.c
 libchangecase.so: changecase.c
 	gcc -fPIC --shared ${CFLAGS} -o $@ $^
 
-dynamic: main.o uppercase.o lowercase.o libchangecase.so libupper.so liblower.so
+dynamic: main.o uppercase.o lowercase.o libchangecase.so 
 	gcc -fPIC ${CFLAGS} -L. -o $@ $^ -lchangecase
 
 %.o: %.c
