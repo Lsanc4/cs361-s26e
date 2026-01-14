@@ -19,7 +19,7 @@ libchangecase.so: changecase.c
 	gcc -fPIC --shared ${CFLAGS} -o $@ $^
 
 dynamic: main.o uppercase.o lowercase.o libchangecase.so 
-	gcc -fPIC ${CFLAGS} -L. -o $@ $^ -lchangecase
+	gcc -rdynamic -fPIC ${CFLAGS} -L. -o $@ $^ -lchangecase
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $^ -o $@
