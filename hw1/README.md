@@ -55,7 +55,7 @@ file on the server.
 
 Most people use vim because they don't know better. Some people do it despite knowing better. If you choose to use vim and want lab credit, you must prove you are one of them by demonstrating advanced vim proficiency. 
 
-*Demonstrate:* given this file, replace three instances of the string "ing" with "ING" using a single command. That is, you may not use the command three times. Then, insert a copy of the third line of this file, at line 40, using a command, not the arrow keys.
+**Demonstrate:** given this file (`README.md`), replace three instances of the string "ing" with "ING" using a single command. That is, you may not use the command three times. Then, quickly navigate to some set of parenthesis and, without entering insert mode or starting a selection, delete the text inside the parenthesis (leaving the empty `()` pair intact).
 
 ## Lab step 3: clone the hw1 github repo, build and run your first program
 
@@ -118,7 +118,7 @@ with the same name as libraries loaded later, these symbols will be used instead
 
 ## Remaining step 7: studying Makefiles 
 
-When you run ``make`` in the hw1 folder, several files are automatically created. 
+When you run ``make static`` in the hw1 folder, several files are automatically created. 
 
 Read the Makefile to see how it works. The ``static`` target has three dependencies listed after the ``:``. For files that already exist, such as ``uppercase.c``, no further work is required. However, the file ``main.o`` is automatically built 
 from the ``main.s`` file, which is built from ``main.pre.c`` and so on. The
@@ -138,7 +138,7 @@ Finally, the command ``touch`` updates the modification date of a file. Run ``to
 several ``gcc`` commands this time. What's different? How does ``make`` know
 which commands it needs to re-run?
 
-There are several instances of unusual syntax in the Makefile: $^, $@, $< and ${CFLAGS}. Make sure you understand every detail of this example Makefile in its entirety. Ask a TA, your instructor, or your favorite AI for help if you need help.
+There are several instances of unusual syntax in the Makefile: `$^`, `$@`, `$<` and `${CFLAGS}`. Make sure you understand every detail of this example Makefile in its entirety. Ask a TA, your instructor, or your favorite AI for help if you need help.
 
 Something else slightly unusual about Makefiles presents itself when we look at how a file like `uppercase.o` was built. There are no rules which directly target `uppercase.o`!
 However, you will find a rule with the funky syntax `%.o: %.c`. We definitely have no file called `%.o` that needs to be built from a file called `%.c`, and indeed, the `%` Makefile
