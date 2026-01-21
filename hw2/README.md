@@ -35,6 +35,8 @@ Delete the catch point with `del 1`, and introduce a new one for just the system
 Try a `bt` to see the stack of function calls that resulted in eventually making this syscall. At the top, you'll see `main`, but no `printf`. This is because the compiler decided to replace `printf` with `puts` due to it being just a simple string. 
 
 Use `disass` to see the assembly of the function at the system call location. 
+>**NOTE**: If you're running on your own Linux machine and see a message like "*No function contains program counter for selected frame*" when running the `disass` command,
+>try running this directly on on the baz server.
 
 *Demonstrate: show the TA the disassembly at the system call location, and point out the instruction that makes the actual system call. 
 
