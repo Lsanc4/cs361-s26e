@@ -38,15 +38,20 @@ NOTE: To make things a little more interesting, `limerick -o` waits a moment bef
 
 ## Remaining Step 4: Pipe the limerick, then uppercase it
 
-In this step, write a `step4` program, which uses `pipe()` and `dup2()` to redirect `limerick`s output into a file descriptor that `step4` (the parent) can read from. 
+In this step, write a `step4` program, which uses `pipe()` and `dup2()` to redirect `limerick`s output into a file descriptor that `step4` (the parent) can read from. For `step4`, make sure your program works correctly with both `limerick -l` for live limerick delivery, and just `limerick` for batch-style poetry.
 
 Here, `pipe()` creates two new file descriptors: one that you can write into, and one that lets you read back
-what was written. What's neat about a `pipe` is that when you `fork()`, the child gets copies of those same end points. If you have the parent `close()` one end, and the child `close()` the other end of the pipe, then you
-have established a connection between your two processes. 
+what was written. Here's how you make one: ``int fds[2]; pipe(fds);``. What's neat about a `pipe` is that when you `fork()`, the child gets copies of those same end points. If you have the parent `close()` one end, and the child `close()` the other end of the pipe, then you have established a connection between your two processes. 
+
 
 Next, `dup2()` enables you to redirect output. `limerick` writes to `stdout`: file descriptor 1 (or to a file if you pass a file name `-o`). However, with `dup2()` we can change what `file descriptor 1` means. In this case, you want `limerick` to the *write* end of the pipe as file descriptor 1, so that anything `limerick` writes ends up in the pipe, instead of on the screen. 
 
 Finally, have `step4` read all of the output, convert it to uppercase, and print it to the terminal. Homework 1 has some handy code for uppercasing strings!
+
+NOTE: A common problem you may run into is that your `step4` doesn't finish running even though the child has died. The reason is that dup2 *copies* a file descriptor, it doesn't move it. Moreover, `read()` will wait 
+forever, as long as the write end is still alive. If there are two copies of the write end, and one dies,
+`read()` will still wait.  So, after the `fork`, make sure you `close()` the end of the pipe that you don't want.
+
 
 ## Remaining step 5: Pass through signals
 
