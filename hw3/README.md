@@ -36,6 +36,8 @@ NOTE: To make things a little more interesting, `limerick -o` waits a moment bef
 
 *Demonstrate:* Show your program, then build and run it, demonstrating it printing a limerick on the terminal.
 
+*Note:* If you still have lab time left, it'd be a great idea to get started on Step 4!
+
 ## Remaining Step 4: Pipe the limerick, then uppercase it
 
 In this step, write a `step4` program, which uses `pipe()` and `dup2()` to redirect `limerick`s output into a file descriptor that `step4` (the parent) can read from. For `step4`, make sure your program works correctly with both `limerick -l` for live limerick delivery, and just `limerick` for batch-style poetry.
