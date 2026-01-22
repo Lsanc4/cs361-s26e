@@ -85,7 +85,10 @@ fn present_limerick(write_to: &mut dyn Write, stop: &Arc<Mutex<bool>>, limerick:
 fn main() -> io::Result<()> {
     let opt = Opt::from_args();
     let filename = opt.file.unwrap_or_else(|| PathBuf::from("limericks.txt"));
-    assert!(filename.as_path().exists(),"Limerick file {filename:?} not found. Specify correct file path with -f. ");
+    if !filename.as_path().exists() {
+        println!("Limerick file {filename:?} not found. Specify correct file path with -f. ");
+        return Ok(());
+    }
     let limericks = load_limericks(filename)?;
 
     if limericks.is_empty() {
