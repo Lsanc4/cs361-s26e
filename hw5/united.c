@@ -9,7 +9,7 @@ union proud {
         uint8_t strikes;
         uint8_t bat_beatings,kneecaps,concrete_shoes;        
     } enforcement;
-    uint16_t membership[4];    
+    uint16_t membership[2][2];    
 };
 
 int main(int argc, char** argv) {
