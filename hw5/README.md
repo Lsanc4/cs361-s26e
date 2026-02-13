@@ -53,7 +53,22 @@ Show a TA a new `struct leet`, which when printed as an 8-byte unsigned integer 
 
 As discussed in class, unions provide a convenient mechanism for interpreting a single range of bytes as several different types. 
 
+The file `united.c` defines a (tongue-in-cheek) `union proud` with three members: `contracts` and `enforcement`, and `membership`. Here, `enforcement` is a struct and membership is an array of 16-bit unsigned integers. 
 
+In contrast with past programs, we are using `stdint.h` here, which provides shorter and more explicit names for many C types. For example `uint16_t` means 16-bit unsigned integer, or `unsigned short` in standard C on most architectures.
+
+Use `gdb` to print the contents of `activities`: first set a breakpoint after it is initialized, the run the program, then `print activities`. Look carefully
+at the values print. It's hard to spot the relationship, but if you use `print/x activities` it may become much clear, as hexadecimal digits line up correctly with bytes. For example, the `pickets` number looks just like the low order digits of the `contracts` number.
+
+Try doubling the number of contracts, using the `gdb` command `set activities.contracts = activities.contracts*2;`, and note how this affects the elements in the enforcement struct. 
+
+Try `print sizeof(activities)` to see how big the activities enum is. Compare this to `print sizeof(activities.enforcement)` and `print sizeof(activities.contracts)`. One is 2 bytes bigger than the other. Use `x/8xb &activities` to see the value of each individual byte of the enum,
+starting at the address `&activities`. Make sure you understand exactly where each one of those 8 bytes go in the three union members. 
+Specifically, which element of the `membership` array contains those two bytes missing in the `enforcement` struct? 
+
+Finally, how many `pickets`, `strikes`, `bat_beatings`, `kneecaps`, and `concrete_shoes` are required in order to reach 3324321662465 `contracts`?
+
+Demonstrate: show your TA the number of each enforcement activity required to achieve 3324321662465 `proud.contracts` in this union. Use `print` in gdb to show it, and explain the method you used to find the solution. 
 
 ### Remaining Step 4: baby steps with malloc
 

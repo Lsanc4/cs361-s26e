@@ -9,7 +9,7 @@ struct leet {
 };
 
 struct foo {
-    unsigned long baz;
+    unsigned long bar;
 };
 
 struct leet l = {0x5b7ed9d1, 0xd03e, 0x03, 0x05 };
