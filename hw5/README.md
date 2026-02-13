@@ -53,7 +53,7 @@ Show a TA a new `struct leet`, which when printed as an 8-byte unsigned integer 
 
 As discussed in class, unions provide a convenient mechanism for interpreting a single range of bytes as several different types. 
 
-The file `united.c` defines a (tongue-in-cheek) `union proud` with three members: `contracts` and `enforcement`, and `membership`. Here, `enforcement` is a struct and membership is an array of 16-bit unsigned integers. 
+The file `united.c` defines a (tongue-in-cheek) `union proud` with three members: `contracts` and `enforcement`, and `membership`. Here, `enforcement` is a struct and membership is a 2x2 array of 16-bit unsigned integers. 
 
 In contrast with past programs, we are using `stdint.h` here, which provides shorter and more explicit names for many C types. For example `uint16_t` means 16-bit unsigned integer, or `unsigned short` in standard C on most architectures.
 
