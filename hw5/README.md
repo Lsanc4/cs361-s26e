@@ -81,22 +81,27 @@ Since we're working with a fresh heap, these chunks are all allocated back to ba
 - How far apart are the strings pieces chunks[1] and chunks[2]? 
 - For every byte starting at chunks[1]-8 and to chunks[2]-8, what is its purpose? Does it have a purpose?
 
+#### Free one chunk 
+
 Now, use `next` to pass the first iteration of the free loop. Make sure you 
 step past the strange `free(malloc(1000000))` as well. 
 
 - Again, for every byte starting at chunks[1]-8 and to chunks[2]-8, what is its purpose? Did the purpose change?
+
+#### Almost free a second chunk
 
 Now, use the `next` to pass free(chunk[2]), so that both chunks[1] and chunks[2] have been freed, but *do not pass `free(malloc(1000000))` yet*!
 
 - Did anything further change in chunk[1] when you freed chunk[2]?
 - What, if anything, changed in `chunk[2]` when we freed it?
 
+#### Fully free the second chunk
 Now, use the `next` again, to pass the `free(malloc(1000000))`. This forces `malloc` to "consolidate the heap": finish any postponed work. In particular, finishing up freeing chunks temporarily stored in the *"unsorted list"*. 
 
 - Did anything further change in chunk[1] after this step? Why?
 - Did anything change in chunk[2]? What, and why?
 
-There are quite a few changes to note here. Digging into it will help you understand malloc well.
+There are quite a few changes to note here, and relate to the conceptual discusison about malloc. Digging into it will help you understand malloc well.
 
 ### Remaining Step 5: revealing malloc internals
 
