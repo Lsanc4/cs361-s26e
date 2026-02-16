@@ -7,6 +7,7 @@
 const char* qbf = "The quick brown fox jumped over the lazy dog.";
 
 int main(int argc, char** argv) {
+    
     char *chunks[strlen(qbf)];
     for(int i=1;i<strlen(qbf);i++) {
         chunks[i] = malloc(i+1);

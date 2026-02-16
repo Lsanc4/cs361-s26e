@@ -74,11 +74,14 @@ Finally, how many `pickets`, `strikes`, `bat_beatings`, `kneecaps`, and `concret
 
 The program `heapify.c` allocates a bunch of chunks, and puts the the beginning of a string into them. It then frees the chunks. 
 
+*In order to more easily observe malloc operation, we will disable the "thread cache" for this exercise.* 
+The file `.gdbinit` contains the `gdb` command to do this. Either follow the `gdb` instructions at startup (there's a warning), or remember to use `source .gdbinit` every time you start `gdb`. The actual command in the `.gdbinit` file is simply `set environment GLIBC_TUNABLES=glibc.malloc.tcache_count=0`. 
+
 Put a breakpoint at the line indicated in `heapify.c`, then use `print chunks[1]` up to `print chunks[44]` to print a couple of the chunks and see what they look like. Then use `x` to see what the same strings look like as hexadecimal bytes. Note that `chunks[0]` is not populated. 
 
 Since we're working with a fresh heap, these chunks are all allocated back to back. Use `x/64bx chunks[1]-8` to study what is in the 8 bytes before and 56 bytes after the start of `chunks[1]`. Study the contents in detail, and try to relate them to what was described in lecture regarding malloc operation. 
 
-- How far apart are the strings pieces chunks[1] and chunks[2]? 
+- How far apart are the string pieces chunks[1] and chunks[2]? 
 - For every byte starting at chunks[1]-8 and to chunks[2]-8, what is its purpose? Does it have a purpose?
 
 #### Free one chunk 
@@ -86,22 +89,27 @@ Since we're working with a fresh heap, these chunks are all allocated back to ba
 Now, use `next` to pass the first iteration of the free loop. Make sure you 
 step past the strange `free(malloc(1000000))` as well. 
 
-- Again, for every byte starting at chunks[1]-8 and to chunks[2]-8, what is its purpose? Did the purpose change?
+- Again, for every byte starting at chunks[1]-8 and to chunks[2]-8, what is its purpose? Did the purpose change? Keep in mind that malloc will not waste time zeroing bytes
+unnecessarily, even if they no longer serve a purpose. 
+
+### Remaining Step 5: revealing malloc internals 
+
+So far, we've observed malloc chunks in their canonical, textbook states. However, malloc includes a large number of optimizations. 
 
 #### Almost free a second chunk
 
-Now, use the `next` to pass free(chunk[2]), so that both chunks[1] and chunks[2] have been freed, but *do not pass `free(malloc(1000000))` yet*!
+Now, use the `next` to pass `free(chunk[2])`, so that both `chunks[1]` and `chunks[2]` have been freed, but *do not pass `free(malloc(1000000))` yet*!
 
-- Did anything further change in chunk[1] when you freed chunk[2]?
+- Did anything further change in `chunks[1]` when you freed `chunks[2]`?
 - What, if anything, changed in `chunk[2]` when we freed it?
 
 #### Fully free the second chunk
+
 Now, use the `next` again, to pass the `free(malloc(1000000))`. This forces `malloc` to "consolidate the heap": finish any postponed work. In particular, finishing up freeing chunks temporarily stored in the *"unsorted list"*. 
 
 - Did anything further change in chunk[1] after this step? Why?
 - Did anything change in chunk[2]? What, and why?
 
-There are quite a few changes to note here, and relate to the conceptual discusison about malloc. Digging into it will help you understand malloc well.
+There are quite a few changes to note here, and to relate to the conceptual discusson about malloc. Digging into it will help you understand malloc well.
 
-### Remaining Step 5: revealing malloc internals
 
