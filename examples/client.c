@@ -15,13 +15,13 @@ int main(int argc, char** argv) {
 
   int fd = socket(AF_INET, SOCK_STREAM, 0);
   if(fd==-1) {
-	perror("problem making socket\n");
+	perror("problem making socket");
 	exit(1);
   }
   int res = connect(fd,(struct sockaddr*)&serv_addr,sizeof(serv_addr));
 
   if(res) {
-	perror("problem connecting\n");
+	perror("problem connecting");
 	exit(1);
   }
 
