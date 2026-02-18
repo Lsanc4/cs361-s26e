@@ -9,7 +9,7 @@ unsigned char hex_value(char c) {
         case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
             return c-'A'+0xA;
         case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
-            return c-'a'+0xA;
+            return c-'a'+0xA;
         default: 
             fprintf(stderr,"What kind of digit is %c anyway?",c);
             exit(1);
