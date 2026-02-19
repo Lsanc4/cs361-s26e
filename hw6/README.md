@@ -1,4 +1,4 @@
-## Homework 6: IPC over shared memory
+## Homework 6: mmap and shared memory
 
 In this assignment, we use the versatile and powerful `mmap` system call in several ways, culminating in two processes communicating via shared memory, rather than through kernel-mediated pipes or sockets. 
 
