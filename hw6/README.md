@@ -18,13 +18,17 @@ Rarely, it is also used for inter-process communication. This is error prone, an
 
 In this step, we use experimentation to figure out what size `malloc` uses as the threshold for a *large* memory allocation. 
 
+*In order to more easily observe malloc operation, we will disable the "thread cache" for this exercise.* 
+When running programs, prefix the command with an environment variable, like this: `GLIBC_TUNABLES=glibc.malloc.tcache_count=0 ./my_command`
+
 Write a program from scratch, that allocates an increasingly large amount of memory. 
 For each allocation, print the address and the boundary tag of the returned chunk. The boundary tag is the 8 bytes before the byte that the returned pointer points at. Use the '%p' printf format specifier to print the chunk address, and the '%x' specifier for the boundary tag. You will notice that the boundary tag contains 
 more than just the size: it also includes one low-order bit to indicate if the previous chunk is free or in-use, and one bit to indicate if it was allocated from the heap, or with `mmap`. 
 
 - Work out which bit (and value of the bit) corresponds to free/in_use. By allocating two chunks, then printing the boundary tag of the first chunk, freeing it, and printing the tag again, you should be able to work it out. 
+- - Depending on the size of the chunks you allocated, you may find that freeing the chunk doesn't change any bit. Try using a larger chunk (1000 bytes), or mallocing an even bigger chunk after (say, 10000 bytes). 
 - Work out which bit corresponds to heap/mmap. By allocating increasingly large chunks, and looking for a change in a low order bit as you pass a certain size, you should be able to work that out.
-- Also work out the exact size where `malloc` switches from heap allocations (reusing memory, or growing the heap with `brk`) to `mmap` system calls. 
+- Also work out the exact size where `malloc` switches from heap allocations (reusing memory, or growing the heap with `brk`) to `mmap` system calls. Be careful not to free the chunks along the way: `malloc` increases the mmap threshold for applications that free large chunks!
 - Finally, observe the actual system calls of your program with `strace` as we have done before. For a request of `x` bytes, does `malloc` ask `mmap` for `x` bytes or something different? How is it different?
 
 *Demonstrate:* show your TA a program that prints the boundary tags of various allocations, in such a way that you can answer the questions above.
@@ -36,11 +40,25 @@ Malloc supports anonymous and file-backed operation. Above, `malloc` used `mmap`
 With file-backed `mmap`, the returned pointer points a region of memory containing the contents of the specified file.
 Moreover, this is a bi-directional mapping: if you write something to the memory, it ends up in the file, without you having explicitly write anything out to disk. But that's for step 3. 
 
+Write a program that includes the provided `disktable.h`. This header file defines `struct disktable`, a variable size struct! The final array has the number of elements stated in the `count` field. 
+Variable size structs in C always have a variable size array at the end, and only at the end. 
 
+Now, `open()` and `mmap()` the file `table.bin`. `mmap` takes a length parameter - use `fstat()` on the open file descriptor to get a `struct stat` which contains the length in the `st_size` field. 
+See `man 2 stat` for more about `stat()`. 
+
+Cast the returned pointer from `mmap()` as a `struct disktable*`, and print each `value` in the disktable to the terminal using `printf`.
+
+*Demonstrate:* a program that correctly reads the complete file contents using mmap, without a hardcoded size or element count.
 
 ### Lab Step 3: write to a persistent datastructure with mmap
 
-- 
+Change your program so that it adds 300 elements to the file every time you run the program. Again, use only mmap. Initialize each of the new 300 elements to its index in the array, for example, `value[500]=500`. Make sure to update the count accordingly. 
+
+If your program works correctly, then each time you run the program, it prints more values: even though you aren't explicitly writing out the file to disk, the fact that you are modifying an `mmaped` data structure means it is automatically persisted.
+
+However, after running the program a few times, you'll encounter a segmentation fault. Can you work out why? HINT: You will need to use `ftruncate` and `mremap` to solve the problem. 
+
+*Demonstrate:* a program that reads table.bin, and adds 300 elements to the file each time it is run. Make sure it works for many runs, and explain to the TA how you solved this. 
 
 ### Remaining Step 4: Observe the operation of a shared library
 
