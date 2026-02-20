@@ -66,7 +66,7 @@ With a shared library, multiple processes share the RAM that holds the library c
 
 The programs `foo.c` and `bar.c` both use the `foobar.so` shared library. `foo` sets the the `foobar` global variable `baz` to 17, then continuously observes the contents of the variable and prints the results. `bar` meanwhile, sets the same variable `baz` to 1, then periodically increments it, and prints the value. 
 
-Observe the addresses of the access functions `setbaz()` and `getbaz()`, as well as the address of `baz` itself. Now, using `strace` work out the following:
+Observe the addresses of the access functions `setbaz()` and `getbaz()`, as well as the address of `baz` itself. Now, using `strace -e openat,mmap`, work out the following:
 
 - what `mmap` calls during the start-up of `foo` and `bar` correspond to loading the shared library?
 - is there more than one per program? How do the allocated regions map to the addresses of the functions and the `baz` global variable?
