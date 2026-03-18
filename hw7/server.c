@@ -8,11 +8,13 @@
 #include<string.h>
 
 int main(int argc, char** argv) {
+  if(argc<2) { printf("Usage: %s <port>\n",argv[0]); exit(1);}
+  int port = atoi(argv[1]);
 
   struct sockaddr_in serv_addr = {0};
   serv_addr.sin_family = AF_INET;
   serv_addr.sin_addr.s_addr = INADDR_ANY;
-  serv_addr.sin_port = htons(8765);
+  serv_addr.sin_port = htons(port);
 
   int fd = socket(AF_INET, SOCK_STREAM, 0);
   if(fd==-1) {
