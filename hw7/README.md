@@ -48,14 +48,17 @@ For the word itself, the count mentioned above, and the sequence number, make su
 
 *Demonstrate:* Live presentation with a single `PRESENT`ing client, and two `nc` clients `AWAIT`ing. The `nc` clients should both see a correct live Limerick presentation, considering both timing and content. 
 
-### Remaining step 4 : stop wasting CPU on the server
+### Remaining step 4: stop wasting CPU on the server
 
 To achieve the required funcionality of step 3, you have been using a `pthread_mutex_t` lock. However, this forces the server to continuously poll the global variable to see if there is something new to deliver. 
 
 In this step, use a `pthread_condvar_t` to have the server more efficiently wait for the clients. As discussed in class, conditon variables must be used *only* to achieve efficiency improvements: the program should continue working correctly even if the condition wait is commented out. Thus, leave your original functionality in place, but introduce condition variable operations to achieve a more efficient wait. 
 
-### Remaining step : Exclusive delivery
+Wait for a presenter to arrive using a `pthread_cond_wait` in a loop, checking each time whether another word has arrived. Use a variable to indicate that a word has arrived AND then a `pthread_cond_signal` to wake any potential waiters. Both are necessary for correct operation, in that order. 
 
-In this final step, introduce a new `privatelisten` command. When a client issues a `privatelisten` command, it waits for the next incoming limerick delivery. The 
+### Remaining step 5: Exclusive delivery
 
-// finish this
+In this final step, introduce a new `awaitprivate` command. When a client issues a `awaitprivate` command, it waits for the next incoming limerick presentation. 
+However, when a presentation occurs, no matter how many private awaiters or regular awaiters there are, only one private awaiter receives the presentation: the others keep waiting. 
+
+Here, use the lock associated with the condition variable to atomically check and modify your condition. The lock is automatically released when you enter `pthread_cond_wait`, and automatically re-acquired before you return.
