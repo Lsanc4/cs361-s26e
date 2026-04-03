@@ -174,12 +174,10 @@ void print_grid() {
 
 void* display_thread(void* arg) {
     (void)arg;
-    while (!queue.done || queue.count > 0) {
+    while (1) {
         print_grid();
         usleep(DISPLAY_US);
     }
-    // final print
-    print_grid();
     return NULL;
 }
 

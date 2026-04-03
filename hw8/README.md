@@ -22,8 +22,8 @@ to switch to debugging one particular thread. From here, you can use `bt` and ot
 
 To make things a little easier to keep track of, you can use `thread name` to give the current thread a nice label, like `main`, or `display`. 
 
-Use `thread info`, `thread`, `bt`, `frame` and `print`, to see what the worker thread is hung up on, and which job it was working on when it happened. 
-How did it get this far, only to hang on this job?
+Use `info thread`, `thread`, `bt`, `frame` and `print`, to see what the worker thread is hung up on.
+You might also notice that one of the worker thread always manages to finish, while the other hangs.
 
 Find and fix the bug that causes this hang. 
 
