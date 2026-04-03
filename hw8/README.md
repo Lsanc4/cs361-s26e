@@ -32,7 +32,10 @@ Find and fix the bug that causes this hang.
 Often, when using two or more workers we find that the two counts at the top of the display don't match up. 
 
 Find and fix the bug(s) that causes this inconsistency. Because the problem is fairly localized, you could consider reading the code. 
-Or, use the `clang` threadsanitizer utility to get some ideas. Compile the binary with `clang` instead of `gcc` using `clang -fsanitize=thread -g flagsquare.c -o flagsquare`. You'll get a fair number of hits, but one of them is probably right.
+Or, use the threadsanitizer utility to get some ideas. Compile the binary with `gcc -fsanitize=thread -g flagsquare.c -o flagsquare`. 
+Using the default settings, the thread sanitizer output will be mixed up with the flag display, and include a lot of 
+hits from the display thread, which is in fact quite racy but harmless. You can disable the interactive display output with the `-q` flag. 
+ You'll get a fair number of hits, but one of them is probably right.
 
 ### Lab Step 3: two or more workers, with swaps - occasional hangs
 

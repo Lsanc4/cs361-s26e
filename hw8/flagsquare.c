@@ -83,7 +83,6 @@ struct Job* dequeue() {
         pthread_cond_wait(&queue.not_empty, &queue.mutex);
     }
     if (queue.count == 0 && queue.done) {
-        pthread_mutex_unlock(&queue.mutex); // REMOVE
         return 0;
     }
     job = &queue.jobs[queue.head];
@@ -198,10 +197,11 @@ void* worker_thread(void* arg) {
 int main(int argc, char* argv[]) {
     int num_workers = 0;
     int delay = 0;
+    int quiet = 0;
     int opt;
     int num_jobs = DEFAULT_NUM_JOBS;
     bool enable_swap = false;
-    while ((opt = getopt(argc, argv, "w:j:shd:")) != -1) {
+    while ((opt = getopt(argc, argv, "w:j:shd:q")) != -1) {
         switch (opt) {
             case 'w':
                 num_workers = atoi(optarg);
@@ -215,10 +215,14 @@ int main(int argc, char* argv[]) {
             case 'd':
                 delay = atoi(optarg);
                 break;
+            case 'q':
+                quiet = true;
+                break;
             case 'h':
             default:
-                printf("Usage: %s -w <num_workers> [-j <num_jobs>] [-s] [-d <usec_delay>]\n", argv[0]);
+                printf("Usage: %s -w <num_workers> [-j <num_jobs>] [-s] [-d <usec_delay>] [-q]\n", argv[0]);
                 printf("  -s : enable SWAP jobs (disabled by default)\n");
+                printf("  -q : disable interactive display (enabled by default)\n");
                 return EXIT_FAILURE;
         }
     }
@@ -237,7 +241,8 @@ int main(int argc, char* argv[]) {
     pthread_t display_tid;
     pthread_t* workers = malloc(num_workers * sizeof(pthread_t));
 
-    pthread_create(&display_tid, NULL, display_thread, NULL);
+    if(!quiet)
+        pthread_create(&display_tid, NULL, display_thread, NULL);
 
     for (int i = 0; i < num_workers; i++) {
         pthread_create(&workers[i], NULL, worker_thread, NULL);
@@ -278,9 +283,11 @@ int main(int argc, char* argv[]) {
     }
 
     // Wait a moment and final display
-    usleep(300000);
-    pthread_cancel(display_tid);  // best effort stop
-    pthread_join(display_tid, NULL);
+    if(!quiet) {
+        usleep(300000);
+        pthread_cancel(display_tid);  // best effort stop
+        pthread_join(display_tid, NULL);
+    }
 
     // Final verification
     printf("\n\n=== Program finished ===\n");
