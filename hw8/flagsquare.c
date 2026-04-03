@@ -160,7 +160,11 @@ void print_grid() {
     }
 
     printf("\033[2J\033[H");  // clear screen and home cursor
-    printf("Global Count: %d    Actual Count: %d\n\n", global_count, actual_count);
+    printf("Global Count: %d    Actual Count: %d\n", global_count, actual_count);
+    if(global_count!=actual_count) {
+        printf("Alert: count mismatch!\n");
+    }
+    printf("\n");
 
     for (int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
