@@ -43,7 +43,7 @@ hits from the display thread, which is in fact racy but harmless at this point. 
 
 ### Lab Step 3: two or more workers, with swaps - occasional hangs
 
-If you run with `./threadsquare -w 4 -s -j 10000000`, you'll find that the program occasionally hangs. Not every time - you may have to try several times for it to happen. For this bug, make sure you use `gdb` to track down the problem. 
+If you run with `./flagsquare -w 4 -s -j 10000000`, you'll find that the program occasionally hangs. Not every time - you may have to try several times for it to happen. For this bug, make sure you use `gdb` to track down the problem. 
 There will be several threads involved, so make sure you use the commands above to navigate between them, select the right frame, and print
 the relevant values and perhaps addresses to see what's going on. 
 An obscure hint: A closer look at index variables may be warranted. 
