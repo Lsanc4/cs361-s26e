@@ -50,13 +50,13 @@ An obscure hint: A closer look at index variables may be warranted.
 
 *Demonstrate:* the program running to completion with four workers, 10000000 jobs, and swaps enabled. 
 
-### Remaining Step 4: The program tends to hang with a small queue - a more subtle race
+### Remaining Step 4: Count inconsistencies with a small queue - a more subtle race
 
-To simulate an overloaded system, reduce QUEUE_SIZE from 100 to 5. Now, the counts are once again inconsistent, even by just a little bit, and occasionally, the program hangs again. Use the thread sanitizer to track this down, and fix the bug. 
+To simulate an overloaded system, reduce QUEUE_SIZE from 100 to 5. Now, the counts are once again inconsistent, even by just a little bit. Use the thread sanitizer to track this down, and fix the bug. 
 
 Hint: for thread safety, it's sometimes necessary to work on a temporary copy of shared data. 
 
-A correct solution runs to completion and produces accurate counts with a QUEUE_SIZE of 5, swaps enabled and 4 threads. 
+A correct solution produces accurate counts with a QUEUE_SIZE of 5, swaps enabled and 4 threads. 
 
 ### Remaining Step 5: The program tends to hang with many worker threads - a different synchronization problem
 
