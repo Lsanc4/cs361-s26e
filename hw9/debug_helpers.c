@@ -110,45 +110,45 @@ void print_disassembly(pid_t pid, uintptr_t rip) {
     cs_close(&handle);
 }
 
-static int globals_callback(Dwfl_Module *module, void**, const char *name, Dwarf_Addr addr, void *arg)
+typedef struct {
+    GlobalVar **list;
+    int        *count;
+    int        *capacity;
+} GlobalsCallbackArg;
+
+static int globals_callback(Dwfl_Module *module, void**, const char *module_name,
+                            Dwarf_Addr, void *arg)
 {
-    GlobalVar **list_ptr = arg;
-    GlobalVar *list = *list_ptr;
-    int *count_ptr = (int *)(((char*)arg) + sizeof(GlobalVar**));
-    int *count = count_ptr;
-    int *capacity_ptr = (int *)(((char*)arg) + 2*sizeof(GlobalVar**));
-    int *capacity = capacity_ptr;
+    GlobalsCallbackArg *cb = arg;
+    GlobalVar **list_ptr   = cb->list;
+    int *count             = cb->count;
+    int *capacity          = cb->capacity;
 
     int i = 0;
     GElf_Sym sym;
     const char *sym_name;
 
     while ((sym_name = dwfl_module_getsym(module, i++, &sym, NULL)) != NULL) {
-//        GElf_Sym sym;
-        // if (dwfl_module_getsym_info(module, i-1, &sym, NULL, NULL, NULL, NULL) == NULL)
-        //     continue;
-
         if (GELF_ST_TYPE(sym.st_info) == STT_OBJECT &&
-            GELF_ST_BIND(sym.st_info) == STB_GLOBAL) {
+            GELF_ST_BIND(sym.st_info) == STB_GLOBAL && 
+            sym.st_size > 0) {
 
             if (*count >= *capacity) {
                 *capacity *= 2;
-                GlobalVar *new_list = realloc(list, *capacity * sizeof(GlobalVar));
+                GlobalVar *new_list = realloc(*list_ptr, *capacity * sizeof(GlobalVar));
                 if (!new_list) return -1;
-                list = new_list;
-                *list_ptr = list;
+                *list_ptr = new_list;          // update caller's pointer
             }
 
-            printf("found %s\n",sym_name);
-            list[*count].name    = strdup(sym_name);
-            list[*count].address = (uintptr_t)addr;
-            list[*count].size    = sym.st_size;
+            (*list_ptr)[*count].module_name = strdup(module_name);          
+            (*list_ptr)[*count].name    = strdup(sym_name);
+            (*list_ptr)[*count].address = (uintptr_t)sym.st_value;  // ← corrected
+            (*list_ptr)[*count].size    = sym.st_size;
             (*count)++;
         }
     }
     return 0;
 }
-
 
 int get_globals(pid_t pid, GlobalVar **out_list, int *out_count)
 {
@@ -175,9 +175,8 @@ int get_globals(pid_t pid, GlobalVar **out_list, int *out_count)
         dwfl_linux_proc_report(dwfl, pid) != 0)
         goto fail;
 
-    /* Use the stable callback API instead of dwfl_module_next */
-    void *args[3] = { &list, &count, &capacity };
-    if (dwfl_getmodules(dwfl, globals_callback, args, 0) == -1)
+    GlobalsCallbackArg cbarg = { &list, &count, &capacity };
+    if (dwfl_getmodules(dwfl, globals_callback, &cbarg, 0) == -1)
         goto fail;
 
     *out_list  = list;
@@ -195,7 +194,9 @@ fail:
 void free_globals(GlobalVar *list, int count)
 {
     if (!list) return;
-    for (int i = 0; i < count; i++)
+    for (int i = 0; i < count; i++) {
         free(list[i].name);
+        free(list[i].module_name);
+    }
     free(list);
 }

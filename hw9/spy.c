@@ -42,8 +42,8 @@ void print_globals() {
         printf("got %d globals\n",nglobals);
         for (int i = 0; i < nglobals; i++) {
             /* Later you can read the value with PTRACE_PEEKDATA */
-            printf("%-30s 0x%016lx  (%zu bytes)\n",
-                globals[i].name, globals[i].address, globals[i].size);
+            printf("%-10s %-30s 0x%016lx  (%zu bytes)\n",
+                globals[i].module_name, globals[i].name, globals[i].address, globals[i].size);
         }
         free_globals(globals, nglobals);
     }
@@ -130,6 +130,10 @@ static void run_tracer(void) {
                 }
                 continue;
             }
+            // if the user hits Ctrl-Z, interpret this to mean exit 
+            if (stopsig == SIGTSTP) {
+                break;
+            }
 
             /* Other stop signals are passed through */
             printf("Child stopped by signal %d\n", stopsig);
@@ -150,7 +154,7 @@ int main(int argc, char *argv[]) {
     }
 
     int opt;
-    while ((opt = getopt(argc, argv, "h")) != -1) {
+    while ((opt = getopt(argc, argv, "+h")) != -1) {
         if (opt == 'h') {
             printf("Usage: %s [-h] <executable> [args...]\n", argv[0]);
             return EXIT_SUCCESS;

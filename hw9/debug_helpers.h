@@ -1,5 +1,6 @@
 /* global.h (or at the top of spy.c) */
 typedef struct {
+    char     *module_name; /* dynamically allocated, caller must free */
     char     *name;      /* dynamically allocated, caller must free */
     uintptr_t address;
     size_t    size;      /* 0 if unknown */

@@ -10,7 +10,13 @@ The current spy is capable, but a little restricted in its abilities. Below, you
 
 ### Lab step 1. Print the values of the tracees global variables
 
-Use the `PTRACE_PEEK` command to read the value of each global variable, and print it in hexadecimal after the symbol name. The code for finding the global variables and their addresses is already provided.
+The template code prints out the values of *all* the global variables, including what's in any shared libraries the tracee uses. 
+Limit the print to globals in the executable.
+
+Then, use the `PTRACE_PEEK` command to read the value of each global variable, and print it in hexadecimal after the symbol name. 
+Keep in mind that different variables may have different size. 
+
+*Demonstrate:* the program running on the test tracee as before, but prints only the globals of the tracee ()
 
 ### Lab step 2. Add a small command interface
 
