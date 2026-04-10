@@ -18,8 +18,9 @@ Instead of immediately printing data about the tracee on Ctrl-C, start with the 
 Accept the following commands:
 
 | key | Action |
+| ---- | ------ |
 | `g` | print globals with values |
-| `f` | print current function | 
+| `f` | print current function |
 | `d` | print current disassembly |
 | `c` | resume the tracee |
 | `x` | exit tracer and tracee | 
