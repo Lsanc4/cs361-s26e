@@ -29,7 +29,9 @@ For `c`, use the `PTRACE_CONTINUE` command. For `x`, send `SIGKILL` to the trace
 
 ### Lab step 3. Function call stepping
 
-| `n` | resume to the next time the current function changes name, then print the new name
+| key | Action |
+| ---- | ------ |
+| `n` | resume to the next time the current function changes name, then print the new name |
 
 Use the `PTRACE_SINGLESTEP` command to repeatedly advance the tracee. For each step, check the name of the current function. 
 Any time the current function changes, print the name of the new function. A user who keeps pressing `n` would see
@@ -37,6 +39,8 @@ a series of functions roughly describing the execution of the program.
 
 ### Remaining step 4. Global variable monitoring 
 
+| key | Action |
+| ---- | ------ |
 | `m` | resume the tracee and periodically print globals with values |
 
 To support periodic sampling, use `setitimer()` before `exec` in the child. The timer survives across `exec`, and the tracee will receive a `SIGALRM`, which 
@@ -44,6 +48,8 @@ the tracer can catch similar to how we catch the `SIGINT` on `Ctrl-C`. Until the
 
 ### Remaining step 5. Add system call monitoring and manual filtering
 
+| key | Action |
+| ---- | ------ |
 | `s` | resume the tracee, then every time the tracee makes a system call, print the syscall number (or better yet, the name!), and resume the tracee |
 | `S` | resume the tracee, then have user approve/reject each system call |
 
