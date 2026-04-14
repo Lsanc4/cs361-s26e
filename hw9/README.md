@@ -4,23 +4,23 @@ In this assignment, we use the Linux ptrace API and a variety of helpful librari
 Below, we'll use the ptrace nomenclature, calling the program doing the peeking the _tracer_, and the child the _tracee_. 
 
 The template code includes `spy.c`, `debug_helpers.{c,h}` and `Makefile`, as well as a small test program `test.c`. To build the spy, run `make spy`, and to
-use it, run `./spy <some program to run>`. Hit Ctrl-C while the program is running, to get some spy output. 
+use it, run `./spy <some program to run>`. Hit Ctrl-C while the program is running, to get some spy output. If you are building this on your own machine, try installing the packages `elfutils` and `libdw-dev` to get it to build.
 
 The current spy is capable, but a little restricted in its abilities. Below, you will unleash its powers. 
 
 ### Lab step 1. Print the values of the tracees global variables
 
 The template code prints out the values of *all* the global variables, including what's in any shared libraries the tracee uses. 
-Limit the print to globals in the executable.
+Limit the print to globals in the executable. You can use the `realpath()` function to turn a relative path name (like `./test`) to an absolute one (like `/home/jakob/test`).
 
-Then, use the `PTRACE_PEEK` command to read the value of each global variable, and print it in hexadecimal after the symbol name. 
+Then, use the `PTRACE_PEEKDATA` command to read the value of each global variable, and print it in hexadecimal after the symbol name. 
 Keep in mind that different variables may have different size. 
 
 *Demonstrate:* the program running on the test tracee as before, but prints only the globals of the tracee ()
 
 ### Lab step 2. Add a small command interface
 
-Instead of immediately printing data about the tracee on Ctrl-C, start with the tracee suspended, and wait for a single character input from the user. 
+Instead of immediately printing data about the tracee on Ctrl-C wait for a single character input from the user. 
 Accept the following commands:
 
 | key | Action |
@@ -31,7 +31,8 @@ Accept the following commands:
 | `c` | resume the tracee |
 | `x` | exit tracer and tracee | 
 
-For `c`, use the `PTRACE_CONTINUE` command. For `x`, send `SIGKILL` to the tracee, then `exit()`. 
+The `switch` statement in C may be handy for this step. 
+For `x`, send `SIGKILL` to the tracee, then `exit()`. 
 
 ### Lab step 3. Function call stepping
 
