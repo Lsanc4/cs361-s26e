@@ -34,6 +34,8 @@ Accept the following commands:
 The `switch` statement in C may be handy for this step. 
 For `x`, send `SIGKILL` to the tracee, then `exit()`. 
 
+*Demonstrate* running each of the commands above, after hitting CTRL-C. 
+
 ### Lab step 3. Function call stepping
 
 | key | Action |
@@ -46,6 +48,9 @@ a series of functions roughly describing the execution of the program.
 
 Note that after `PTRACE_SINGLESTEP` the child will get a `SIGTRAP` signal after one instruction. You'll want to handle that (decide whether to print, etc)
 rather than pass it through to the child. 
+
+*Demonstrate:* When the user hits CTRL-C then types 'n', the program single steps until the function name changes, then prints the function name.
+The user may type 'n' again, to get the next function, or 'c' to continue running normally. 
 
 ### Remaining step 4. Global variable monitoring 
 
