@@ -44,6 +44,9 @@ Use the `PTRACE_SINGLESTEP` command to repeatedly advance the tracee. For each s
 Any time the current function changes, print the name of the new function. A user who keeps pressing `n` would see
 a series of functions roughly describing the execution of the program.  
 
+Note that after `PTRACE_SINGLESTEP` the child will get a `SIGTRAP` signal after one instruction. You'll want to handle that (decide whether to print, etc)
+rather than pass it through to the child. 
+
 ### Remaining step 4. Global variable monitoring 
 
 | key | Action |
