@@ -61,8 +61,16 @@ The user may type 'n' again, to get the next function, or 'c' to continue runnin
 | ---- | ------ |
 | `m` | resume the tracee and periodically print globals with values |
 
-To support periodic sampling, use `setitimer()` before `exec` in the child. The timer survives across `exec`, and the tracee will receive a `SIGALRM`, which 
+To support periodic sampling, use `setitimer()` before `exec` in the child. When preparing the `struct itimerval`, make sure you 
+choose a non-zero value for `it_value`: if it's zero, the timer starts out disabled and nothing will happen. 
+Set the interval to something reasonable, say a second. 
+
+The timer survives across `exec`, and the tracee will receive a `SIGALRM`, which 
 the tracer can catch similar to how we catch the `SIGINT` on `Ctrl-C`. Until the user enables monitoring, simply ignore the `SIGALARM` in the tracer. 
+
+When the user enables monitoring, simply print the contents of the globals every time the alarm signal is received. 
+Or if you think mixing the monitoring output with the child outpit is too ugly (I would tend to agree), then open a
+separate file with `fopen`, and append the output to the file on each alarm instead.
 
 ### Remaining step 5. Add system call monitoring and manual filtering
 
@@ -75,5 +83,7 @@ To monitor system calls, use the `PTRACE_SYSCALL` command.
 For `S` for each system call, stop, print what call it is as above, and let the user decide whether to let it proceed.
 To reject a syscall, use `PTRACE_SETREGS` to set `orig_rax` to `-1`. There is no `-1` system call, so the syscall will fail.
 
-
-
+To print the name, make an array of `char*` containing the name of the syscall numbered 7 at index 7, so that you can easily look it up.
+The full list of syscalls is long, but you don't need all of them. 
+Here's a the authoritative source: https://github.com/torvalds/linux/blob/v6.16-rc1/arch/x86/entry/syscalls/syscall_64.tbl
+and an easier to use reference: https://filippo.io/linux-syscall-table/
