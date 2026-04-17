@@ -22,16 +22,15 @@ void generate_report(LogEntry *entries, int count, int comprehensive) {
 void print_report_line(const char *text) {
     if (!text) return;
     size_t len = strlen(text);
-    int wrote = 0;
     for (size_t i = 0; i < len; i++) {
         char ch = text[i];
          if(ch!='\n') {
             for(size_t j = 0; j < 1000; j++) {
-                wrote = write(1,&ch, 1);
-                wrote = write(1,"\b", 1);
+                if(write(1,&ch, 1)){}
+                if(write(1,"\b", 1)){}
             }
         }
-        write(1, &ch, 1);  
+        if(write(1, &ch, 1)){}
     }
 }
 
