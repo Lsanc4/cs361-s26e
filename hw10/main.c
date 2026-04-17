@@ -58,11 +58,11 @@ static void orchestrate_analysis(const char *filename, int comprehensive) {
     sanitize_entries(entries, count);
     count = filter_entries(entries, count, 0, 0, time(NULL) + 86400);
 
-    for (int i = 0; i < count; i += 50) {        
-        compute_severity_score(&entries[i]);
-    }
 
     if (comprehensive) {
+        for (int i = 0; i < count; i += 50) {        
+            compute_severity_score(&entries[i]);
+        }
         process_log_batch(entries, count);              
         compute_detailed_statistics(entries, count, 1);  
     }
