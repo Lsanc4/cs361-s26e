@@ -1,0 +1,8 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#define MAX_ENTRIES 20000
+#define MAX_LINE_LEN 1024
+#define REPORT_BUFFER_SIZE 4096
+
+#endif
