@@ -18,3 +18,6 @@ Then, use `strace` with the `-e` parameter to filter on a specific system call n
 
 Even with the above bug eliminated, the program takes its sweet time generating that report, for a mere 10,000 lines of log. 
 Run the program with `time` again to see what is up now. 
+
+The measurements suggest we're spending a lot of time working on system calls, not just waiting. 
+Find out which system calls we are making and how much time they are taking, using `strace -c`.
