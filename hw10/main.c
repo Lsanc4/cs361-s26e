@@ -69,10 +69,8 @@ static void orchestrate_analysis(const char *filename, int comprehensive) {
 
     int matrix[5][5];
     build_event_correlations(entries, count, matrix);
-    print_correlation_matrix(matrix);
-
     generate_report(entries, count, comprehensive);
-
+    print_correlation_matrix(matrix);
 
     free(entries);
 }
