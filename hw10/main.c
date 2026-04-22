@@ -39,7 +39,7 @@ static void print_usage(const char *progname) {
     printf("  --comprehensive : Enable deeper analysis (triggers object-file functions)\n");
 }
 
-__attribute((noinline))__
+__attribute__((noinline))
 void orchestrate_analysis(const char *filename, int comprehensive) {
     sleep(8);
 
