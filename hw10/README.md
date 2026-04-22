@@ -19,6 +19,8 @@ One confusing aspect of the backtrace is that when compiled with optimization, t
 
  Use the backtrace information to find and eliminate the problem that's taking several seconds. 
 
+ *Demonstrate* to your TA what the problem was, and how you found it.
+
 ### Step 2: Frustratingly slow report
 
 Even with the above bug eliminated, the program takes its sweet time generating that report, for a mere 100 lines of log. 
@@ -31,6 +33,8 @@ Use `strace -k -e` again, to track down and kill this bug. Again, temporarily di
 
 At this point, you should be able to run the analyzer in a small fraction of a second, with the `100.txt` log file. 
 
+*Demonstrate* to your TA what the problem was, and how you found it.
+
 ### Step 3: Larger log, longer time
 
 However, step up to the `1k.txt` log file, and it's already going slower again, not to mention `10k.txt`. 
@@ -41,3 +45,17 @@ To figure out what work, use the `perf record` and `perf report` profiling sampl
 Using the `--call-graph=dwarf` option to `perf record`, we collect the call stack, not just the instruction pointer at each sample time. Expand the top entry a few times, to see which function doing most of the strcmp calling.
 
 Have a close look at that function - can you speed it up?
+
+*Demonstrate* to your TA what the problematic function was, how you found it, and yur proposed fix.
+
+### Remaining Step 4: TBD
+
+Check back soon
+
+### Remaining Step 5: TBD
+
+Check back soon
+
+### Remaining Step 6: TBD
+
+Check back soon
