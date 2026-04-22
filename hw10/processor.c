@@ -25,8 +25,8 @@ void build_event_correlations(LogEntry *entries, int count, int correlation_matr
     for (int i = 0; i < count; i++) {
         for (int j = 0; j < count; j++) {
             for (int k = 0; k < count; k++) {
-                if (strcmp(entries[i].event_type, entries[j].event_type) == 0 &&
-                    strcmp(entries[j].event_type, entries[k].event_type) == 0) {
+                if (strcmp(entries[i].event_type, entries[k].event_type) == 0 &&
+                    strcmp(entries[k].event_type, entries[j].event_type) == 0) {
                     int idx1 = entries[i].severity;
                     int idx2 = entries[k].severity;
                     if (idx1 >= 0 && idx1 < 5 && idx2 >= 0 && idx2 < 5) {
