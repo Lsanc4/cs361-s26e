@@ -5,7 +5,7 @@ binary object files, for a log analysis tool.
 
 It works, but it's not as fast as we would like.
 
-### Step 1: Slow start
+### Lab Step 1: Slow start
 
 Build the analyzer with `make`, then run `./log_analyzer 1k.txt`. You should get some output indicating the number of events per hour, and the severity distribution. 
 
@@ -21,7 +21,7 @@ One confusing aspect of the backtrace is that when compiled with optimization, t
 
  *Demonstrate* to your TA what the problem was, and how you found it.
 
-### Step 2: Frustratingly slow report
+### Lab Step 2: Frustratingly slow report
 
 Even with the above bug eliminated, the program takes its sweet time generating that report, for a mere 100 lines of log. 
 Run the program with `time` again to see what is up now. 
@@ -35,7 +35,7 @@ At this point, you should be able to run the analyzer in a small fraction of a s
 
 *Demonstrate* to your TA what the problem was, and how you found it.
 
-### Step 3: Larger log, longer time
+### Lab Step 3: Larger log, longer time
 
 However, step up to the `1k.txt` log file, and it's already going slower again, not to mention `10k.txt`. 
 Use `time` again to have another look. Now, it looks like we mostly burning CPU in user space, doing some kind of work.
