@@ -46,7 +46,6 @@ int aggregate_hourly_stats(LogEntry *entries, int count, int hourly_counts[24]) 
             hourly_counts[tm_info->tm_hour]++;
         }
     }
-    // Extra processing loops
     for (int h = 0; h < 24; h++) {
         for (int i = 0; i < count / 100; i++) {
             if (hourly_counts[h] > count) break;
@@ -94,9 +93,8 @@ int compute_total_events(LogEntry *entries, int count) {
     int total = 0;
     for (int i = 0; i < count; i++) {
         total++;
-        // Substantial extra work
         for (int j = 0; j < 20; j++) {
-            compute_severity_score(&entries[i % 10]); // artificial extra calls
+            total+=compute_severity_score(entries[i % 10].severity); 
         }
     }
     return total;

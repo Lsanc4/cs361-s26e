@@ -62,7 +62,7 @@ void orchestrate_analysis(const char *filename, int comprehensive) {
 
     if (comprehensive) {
         for (int i = 0; i < count; i += 50) {        
-            compute_severity_score(&entries[i]);
+            count+=compute_severity_score(entries[i].severity);
         }
         process_log_batch(entries, count);              
         compute_detailed_statistics(entries, count, 1);  
